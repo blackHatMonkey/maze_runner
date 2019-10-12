@@ -1,3 +1,6 @@
+#ifndef LINKED_LIST_H
+#define LINKED_LIST_H
+
 class SList;
 
 struct Node {
@@ -23,3 +26,5 @@ public:
   Node *back_node() const;
   int size() const noexcept;
 };
+
+#endif

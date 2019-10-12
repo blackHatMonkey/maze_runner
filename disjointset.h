@@ -1,5 +1,7 @@
+#ifndef DISJOINTSET_H
+#define DISJOINTSET_H
+
 #include <vector>
-#include <memory>
 
 #include "linked_list.h"
 
@@ -22,3 +24,5 @@ public:
   DisjointSet &operator=(DisjointSet &&other);
   ~DisjointSet();
 };
+
+#endif
