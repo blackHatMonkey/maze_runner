@@ -1,5 +1,10 @@
 #include "linked_list.h"
 
+/**
+ * @brief Adds node to the front of the list.
+ *
+ * @param node A new node to add.
+ */
 void SList::push_front(Node *node) {
   node->linked_list = this;
   node->next = front;
@@ -11,6 +16,12 @@ void SList::push_front(Node *node) {
   front = node;
   size_of_list++;
 }
+
+/**
+ * @brief Adds node to the back of the list.
+ *
+ * @param node A new node to add.
+ */
 void SList::push_back(Node *node) {
   node->linked_list = this;
   node->next = nullptr;
@@ -26,45 +37,31 @@ void SList::push_back(Node *node) {
   size_of_list++;
 }
 
+/**
+ * @brief Returns whether the list is empty or not.
+ *
+ * @return true If list is emtpy.
+ * @return false If list is not empty.
+ */
 bool SList::list_empty() const { return front == nullptr; }
 
-void SList::print() const {
-  auto curr = front;
-  while (curr != nullptr) {
-    std::cout << curr->data << " ";
-    curr = curr->next;
-  }
-  if (!front) {
-    std::cout << "empty list";
-  }
-
-  std::cout << "parent list:" << front->linked_list << std::endl
-            << "front:" << front->linked_list->front->data << std::endl
-            << "back:" << front->linked_list->back->data << std::endl;
-
-  std::cout << std::endl;
-}
-
+/**
+ * @brief Returns the node in the front of the list.
+ *
+ * @return Node* Node in the front.
+ */
 Node *SList::front_node() const { return front; }
 
+/**
+ * @brief Returns the node in the back of the list.
+ *
+ * @return Node* Node in the back.
+ */
 Node *SList::back_node() const { return back; }
 
-// void SList::set_back(Node *node) { back = node; }
-
-// void SList::set_front(Node *node) { front = node; }
-
+/**
+ * @brief Returns the size of the list.
+ *
+ * @return int Size of the list.
+ */
 int SList::size() const noexcept { return size_of_list; }
-
-void SList::clear(){
-  front = nullptr;
-  back = nullptr;
-}
-
-SList::~SList() {
-  auto current = front;
-  while (current) {
-    auto next = current->next;
-    delete current;
-    current = next;
-  }
-}

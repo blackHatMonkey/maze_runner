@@ -6,10 +6,10 @@
 class DisjointSet {
 private:
   std::vector<Node *> all_members;
-  std::vector<std::unique_ptr<SList>> linked_lists;
 
-  void remove_list(SList *);
-  void moveAllListMembers(SList *, SList *) noexcept;
+  void clear();
+  void move_all_list_members(SList *, SList *) noexcept;
+  void copy_all_list_members(SList *, SList *);
 
 public:
   DisjointSet(int max);
@@ -20,4 +20,5 @@ public:
   DisjointSet &operator=(const DisjointSet &other);
   DisjointSet(DisjointSet &&other);
   DisjointSet &operator=(DisjointSet &&other);
+  ~DisjointSet();
 };

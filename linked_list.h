@@ -1,5 +1,3 @@
-#include <iostream>
-
 class SList;
 
 struct Node {
@@ -21,12 +19,7 @@ private:
 public:
   void push_front(Node *node);
   void push_back(Node *node);
-  Node* front_node() const;
-  Node* back_node() const;
-  // void set_front(Node *);
-  // void set_back(Node *);
-  void clear();
+  Node *front_node() const;
+  Node *back_node() const;
   int size() const noexcept;
-  void print() const;
-  ~SList();
 };
