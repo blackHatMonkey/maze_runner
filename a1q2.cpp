@@ -7,23 +7,38 @@
 #include "wall.h"
 
 void generateAllWalls(int, int, std::vector<Wall> &);
-void generateRandomMaze(int, int, std::vector<Wall> &);
+void removeRandomWalls(int, int, std::vector<Wall> &);
 bool shouldRemoveWall(const Wall &);
 void copyAllWalls(std::vector<Wall>, Wall[]);
 
 constexpr auto emptyCell = -1;
 
+/**
+ * @brief Generate a random maze.
+ *
+ * @param row Width of the maze.
+ * @param col Height of the maze.
+ * @param walls All walls in maze.
+ * @return int Number of generated walls.
+ */
 int generateMaze(int row, int col, Wall walls[]) {
   const auto maximumNumberOfWalls = (row - 1) * col + (col - 1) * row;
   std::vector<Wall> possibleWalls(maximumNumberOfWalls);
 
   generateAllWalls(row, col, possibleWalls);
-  generateRandomMaze(row, col, possibleWalls);
+  removeRandomWalls(row, col, possibleWalls);
   copyAllWalls(possibleWalls, walls);
 
   return possibleWalls.size();
 }
 
+/**
+ * @brief Generate all possible walls in the maze.
+ *
+ * @param row Width of the maze.
+ * @param col Height of the maze.
+ * @param walls All walls in maze.
+ */
 void generateAllWalls(int row, int col, std::vector<Wall> &walls) {
   auto lastRow = row - 1;
   auto lastCol = col - 1;
@@ -46,7 +61,16 @@ void generateAllWalls(int row, int col, std::vector<Wall> &walls) {
   }
 }
 
-void generateRandomMaze(int row, int col, std::vector<Wall> &walls) {
+/**
+ * @brief Remove random walls in the maze until all cells are connected.
+ *
+ * This function guarantees that all cells in the maze are accessable.
+ *
+ * @param row Width of the maze.
+ * @param col Height of the maze.
+ * @param walls All walls in maze.
+ */
+void removeRandomWalls(int row, int col, std::vector<Wall> &walls) {
   const auto numberOfCells = row * col;
   auto disjointSet = DisjointSet(numberOfCells);
 
@@ -78,8 +102,21 @@ void generateRandomMaze(int row, int col, std::vector<Wall> &walls) {
               walls.end());
 }
 
+/**
+ * @brief Returns whether a wall should be removed or not.
+ *
+ * @param wall A wall.
+ * @return true If wall should be removed.
+ * @return false If wall should be kept.
+ */
 bool shouldRemoveWall(const Wall &wall) { return wall.cell1() == emptyCell; }
 
-void copyAllWalls(std::vector<Wall> generatedWalls, Wall walls[]) {
-  std::copy(generatedWalls.begin(), generatedWalls.end(), walls);
+/**
+ * @brief Copies all the walls from source to destination.
+ *
+ * @param source Source of copy.
+ * @param destination Destination of copy.
+ */
+void copyAllWalls(std::vector<Wall> source, Wall destination[]) {
+  std::copy(source.begin(), source.end(), destination);
 }
