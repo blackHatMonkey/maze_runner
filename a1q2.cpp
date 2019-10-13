@@ -1,14 +1,13 @@
 #include <algorithm>
 #include <random>
-#include <vector>
 #include <set>
+#include <vector>
 
 #include "disjointset.h"
 #include "wall.h"
 
 void generateAllWalls(int, int, std::vector<Wall> &);
 void generateRandomMaze(int, int, std::vector<Wall> &);
-bool visitedWall(const std::set<int> &, int);
 bool shouldRemoveWall(const Wall &);
 void copyAllWalls(std::vector<Wall>, Wall[]);
 
@@ -55,37 +54,28 @@ void generateRandomMaze(int row, int col, std::vector<Wall> &walls) {
     disjointSet.makeSet(i);
   }
 
-  std::random_device randomDevice;
-  std::mt19937 generator(randomDevice());
+  auto randomWallIndexes = std::vector<int>(walls.size());
+  std::iota(randomWallIndexes.begin(), randomWallIndexes.end(), 0);
+  std::shuffle(randomWallIndexes.begin(), randomWallIndexes.end(),
+               std::mt19937{std::random_device{}()});
 
-  auto visited = std::set<int>();
-  auto numberOfWalls = walls.size();
-  std::uniform_int_distribution<> uniformDistributor(0, numberOfWalls - 1);
-  while (visited.size() != numberOfWalls) {
-    auto randomIndex = uniformDistributor(generator);
+  for (auto &index : randomWallIndexes) {
+    auto currentWall = walls[index];
 
-    auto currentWall = walls[randomIndex];
-    if (!visitedWall(visited, randomIndex)) {
-      visited.insert(randomIndex);
+    auto firstCell = currentWall.cell1();
+    auto secondCell = currentWall.cell2();
 
-      auto firstCell = currentWall.cell1();
-      auto secondCell = currentWall.cell2();
-      auto firstRepresentative = disjointSet.findSet(firstCell);
-      auto secondRepresentative = disjointSet.findSet(secondCell);
+    auto firstRepresentative = disjointSet.findSet(firstCell);
+    auto secondRepresentative = disjointSet.findSet(secondCell);
 
-      if (firstRepresentative != secondRepresentative) {
-        disjointSet.unionSets(firstRepresentative, secondRepresentative);
-        walls[randomIndex].set(emptyCell, emptyCell);
-      }
+    if (firstRepresentative != secondRepresentative) {
+      disjointSet.unionSets(firstRepresentative, secondRepresentative);
+      walls[index].set(emptyCell, emptyCell);
     }
   }
 
   walls.erase(std::remove_if(walls.begin(), walls.end(), shouldRemoveWall),
               walls.end());
-}
-
-bool visitedWall(const std::set<int> &set, int index) {
-  return set.find(index) != set.end();
 }
 
 bool shouldRemoveWall(const Wall &wall) { return wall.cell1() == emptyCell; }
