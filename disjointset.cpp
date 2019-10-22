@@ -1,6 +1,75 @@
 #include "disjointset.h"
 
-DisjointSet::DisjointSet(int max) { all_members.resize(max); }
+// TODO:remove this
+#include <iostream>
+
+/**
+ * @brief Adds node to the front of the list.
+ *
+ * @param node A new node to add.
+ */
+void SList::pushFront(Node *node) {
+  node->linkedList = this;
+  node->next = front;
+
+  if (listEmpty()) {
+    back = node;
+  }
+
+  front = node;
+  sizeOfList++;
+}
+
+/**
+ * @brief Adds node to the back of the list.
+ *
+ * @param node A new node to add.
+ */
+void SList::pushBack(Node *node) {
+  node->linkedList = this;
+  node->next = nullptr;
+
+  if (listEmpty()) {
+    front = node;
+    back = node;
+  } else {
+    back->next = node;
+    back = node;
+  }
+
+  sizeOfList++;
+}
+
+/**
+ * @brief Returns whether the list is empty or not.
+ *
+ * @return true If list is emtpy.
+ * @return false If list is not empty.
+ */
+bool SList::listEmpty() const { return front == nullptr; }
+
+/**
+ * @brief Returns the node in the front of the list.
+ *
+ * @return Node* Node in the front.
+ */
+Node *SList::frontNode() const { return front; }
+
+/**
+ * @brief Returns the node in the back of the list.
+ *
+ * @return Node* Node in the back.
+ */
+Node *SList::backNode() const { return back; }
+
+/**
+ * @brief Returns the size of the list.
+ *
+ * @return int Size of the list.
+ */
+int SList::size() const noexcept { return sizeOfList; }
+
+DisjointSet::DisjointSet(int max) { allMembers.resize(max); }
 
 /**
  * @brief Creates a set with object as the only member
@@ -10,12 +79,12 @@ DisjointSet::DisjointSet(int max) { all_members.resize(max); }
  * @return false if object is already in a set
  */
 bool DisjointSet::makeSet(int object) {
-  if (!all_members[object]) {
-    auto new_list = new SList;
-    auto new_node = new Node(object);
+  if (!allMembers[object]) {
+    auto newList = new SList;
+    auto newNode = new Node(object);
 
-    new_list->push_back(new_node);
-    all_members[object] = new_node;
+    newList->pushBack(newNode);
+    allMembers[object] = newNode;
 
     return true;
   }
@@ -30,8 +99,9 @@ bool DisjointSet::makeSet(int object) {
  * @return int representative of the set.
  */
 int DisjointSet::findSet(int object) const {
-  auto node = all_members[object];
-  auto representative = node->linked_list->front_node();
+  auto node = allMembers[object];
+  auto representative = node->linkedList->frontNode();
+
   return representative->data;
 }
 
@@ -44,30 +114,30 @@ int DisjointSet::findSet(int object) const {
  * @return false if the union was unsuccessful.
  */
 bool DisjointSet::unionSets(int rep1, int rep2) {
-  auto first_representative = findSet(rep1);
-  auto second_representative = findSet(rep2);
+  auto firstRepresentative = findSet(rep1);
+  auto secondRepresentative = findSet(rep2);
 
-  if (first_representative != rep1 || second_representative != rep2 ||
+  if (firstRepresentative != rep1 || secondRepresentative != rep2 ||
       rep1 == rep2) {
     return false;
   }
 
-  if (first_representative == second_representative) {
+  if (firstRepresentative == secondRepresentative) {
     return true;
   }
 
-  auto first_list = all_members[rep1]->linked_list;
-  auto second_list = all_members[rep2]->linked_list;
+  auto firstList = allMembers[rep1]->linkedList;
+  auto firstListSize = firstList->size();
 
-  auto first_list_size = first_list->size();
-  auto second_list_size = second_list->size();
+  auto secondList = allMembers[rep2]->linkedList;
+  auto secondListSize = secondList->size();
 
-  if (first_list_size > second_list_size) {
-    move_all_list_members(first_list, second_list);
-    delete second_list;
+  if (firstListSize > secondListSize) {
+    moveAllListMembers(firstList, secondList);
+    delete secondList;
   } else {
-    move_all_list_members(second_list, first_list);
-    delete first_list;
+    moveAllListMembers(secondList, firstList);
+    delete firstList;
   }
 
   return true;
@@ -79,13 +149,13 @@ bool DisjointSet::unionSets(int rep1, int rep2) {
  * @param first Destination list
  * @param second Source list
  */
-void DisjointSet::move_all_list_members(SList *first, SList *second) noexcept {
-  auto current_node = second->front_node();
-  while (current_node) {
-    auto next_node = current_node->next;
-    first->push_back(current_node);
+void DisjointSet::moveAllListMembers(SList *first, SList *second) noexcept {
+  auto currentNode = second->frontNode();
+  while (currentNode) {
+    auto nextNode = currentNode->next;
+    first->pushBack(currentNode);
 
-    current_node = next_node;
+    currentNode = nextNode;
   }
 }
 
@@ -94,19 +164,19 @@ void DisjointSet::move_all_list_members(SList *first, SList *second) noexcept {
  *
  */
 void DisjointSet::clear() {
-  for (auto i = 0u; i < all_members.size(); i++) {
-    if (all_members[i]) {
-      auto list = all_members[i]->linked_list;
+  for (auto i = 0u; i < allMembers.size(); i++) {
+    if (allMembers[i]) {
+      auto list = allMembers[i]->linkedList;
 
-      auto current_node = list->front_node();
-      while (current_node) {
-        auto next_node = current_node->next;
-        auto data = current_node->data;
+      auto currentNode = list->frontNode();
+      while (currentNode) {
+        auto nextNode = currentNode->next;
+        auto data = currentNode->data;
 
-        delete current_node;
-        all_members[data] = nullptr;
+        delete currentNode;
+        allMembers[data] = nullptr;
 
-        current_node = next_node;
+        currentNode = nextNode;
       }
 
       delete list;
@@ -121,14 +191,14 @@ void DisjointSet::clear() {
  */
 DisjointSet::DisjointSet(const DisjointSet &other) {
   if (this != &other) {
-    all_members.resize(other.all_members.size());
+    allMembers.resize(other.allMembers.size());
 
-    for (auto i = 0u; i < all_members.size(); i++) {
-      if (!all_members[i]) {
-        auto new_list = new SList;
+    for (auto i = 0u; i < allMembers.size(); i++) {
+      if (!allMembers[i]) {
+        auto newList = new SList;
 
-        auto other_list = other.all_members[i]->linked_list;
-        copy_all_list_members(new_list, other_list);
+        auto otherList = other.allMembers[i]->linkedList;
+        copyAllListMembers(newList, otherList);
       }
     }
   }
@@ -140,38 +210,38 @@ DisjointSet::DisjointSet(const DisjointSet &other) {
  * @param first Destination list.
  * @param second Source list.
  */
-void DisjointSet::copy_all_list_members(SList *first, SList *second) {
-  auto current_node = second->front_node();
-  while (current_node) {
-    auto new_node = new Node(current_node->data);
-    
-    auto data = current_node->data;
-    all_members[data] = new_node;
-    
-    first->push_back(new_node);
+void DisjointSet::copyAllListMembers(SList *first, SList *second) {
+  auto currentNode = second->frontNode();
+  while (currentNode) {
+    auto newNode = new Node(currentNode->data);
 
-    current_node = current_node->next;
+    auto data = currentNode->data;
+    allMembers[data] = newNode;
+
+    first->pushBack(newNode);
+
+    currentNode = currentNode->next;
   }
 }
 
 /**
  * @brief Copies other to a new list.
- * 
+ *
  * @param other A list to copy from.
  * @return DisjointSet& A new set with other's values copied over.
  */
 DisjointSet &DisjointSet::operator=(const DisjointSet &other) {
   if (this != &other) {
     clear();
-    all_members.clear();
-    all_members.resize(other.all_members.size());
+    allMembers.clear();
+    allMembers.resize(other.allMembers.size());
 
-    for (auto i = 0u; i < all_members.size(); i++) {
-      if (!all_members[i]) {
-        auto new_list = new SList;
+    for (auto i = 0u; i < allMembers.size(); i++) {
+      if (!allMembers[i]) {
+        auto newList = new SList;
 
-        auto other_list = other.all_members[i]->linked_list;
-        copy_all_list_members(new_list, other_list);
+        auto otherList = other.allMembers[i]->linkedList;
+        copyAllListMembers(newList, otherList);
       }
     }
   }
@@ -181,24 +251,24 @@ DisjointSet &DisjointSet::operator=(const DisjointSet &other) {
 
 /**
  * @brief Moves others' data to the current object.
- * 
+ *
  * @param other Another set.
  */
 DisjointSet::DisjointSet(DisjointSet &&other) {
   if (this != &other) {
-    all_members = std::move(other.all_members);
+    allMembers = std::move(other.allMembers);
   }
 }
 
 /**
  * @brief Moves others' data to the current object.
- * 
+ *
  * @param other Another set.
  * @return DisjointSet& A new set with others' data.
  */
 DisjointSet &DisjointSet::operator=(DisjointSet &&other) {
   if (this != &other) {
-    all_members = std::move(other.all_members);
+    allMembers = std::move(other.allMembers);
   }
 
   return *this;
@@ -206,6 +276,6 @@ DisjointSet &DisjointSet::operator=(DisjointSet &&other) {
 
 /**
  * @brief Destroy the object.
- * 
+ *
  */
 DisjointSet::~DisjointSet() { clear(); }

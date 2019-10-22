@@ -3,15 +3,39 @@
 
 #include <vector>
 
-#include "linked_list.h"
+class SList;
+
+struct Node {
+  int data;
+  SList *linkedList = nullptr;
+  Node *next = nullptr;
+
+  Node(int data) noexcept { this->data = data; }
+};
+
+class SList {
+private:
+  Node *front = nullptr;
+  Node *back = nullptr;
+  int sizeOfList = 0;
+
+  bool listEmpty() const;
+
+public:
+  void pushFront(Node *node);
+  void pushBack(Node *node);
+  Node *frontNode() const;
+  Node *backNode() const;
+  int size() const noexcept;
+};
 
 class DisjointSet {
 private:
-  std::vector<Node *> all_members;
+  std::vector<Node *> allMembers;
 
   void clear();
-  void move_all_list_members(SList *, SList *) noexcept;
-  void copy_all_list_members(SList *, SList *);
+  void moveAllListMembers(SList *, SList *) noexcept;
+  void copyAllListMembers(SList *, SList *);
 
 public:
   DisjointSet(int max);
