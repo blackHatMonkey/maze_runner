@@ -1,5 +1,5 @@
-#ifndef DISJOINTSET_H
-#define DISJOINTSET_H
+#ifndef DISJOINTSET_HPP
+#define DISJOINTSET_HPP
 
 #include <vector>
 

@@ -1,17 +1,13 @@
-/**************************************************************************/
-/*                                                                        */
-/*   A1 part1 tester file                                                 */
-/*                                                                        */
-/*   To compile: g++ disjointset.cpp a1q1tester.cpp timer.cpp -std=c++0x  */
-/*                                                                        */
-/*                                                                        */
-/**************************************************************************/
+/*
+ * To compile: g++ disjointset.cpp disjointset_test.cpp timer.cpp -std=c++0x
+ */
 
-#include "disjointset.h"
-#include "timer.h"
 #include <cstdlib>
 #include <iostream>
 #include <string>
+
+#include "disjointset.hpp"
+#include "timer.hpp"
 
 bool test1(std::string &error);
 bool test2(std::string &error);
@@ -43,10 +39,11 @@ int main(void) {
     }
   }
   if (numPassed == numTests) {
-    std::cout << "Congratulations! You have passed testing for A1 part 1"
-              << std::endl;
+    std::cout << "All tests passed!" << std::endl;
+    return 0;
   } else {
-    std::cout << "Looks like you still have some work left to do" << std::endl;
+    std::cout << "Tests failing!" << std::endl;
+    return 1;
   }
 }
 /* test1: make 100 disjoint sets, check return value.  Call makeSet() on

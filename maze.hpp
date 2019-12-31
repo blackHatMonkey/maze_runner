@@ -1,21 +1,23 @@
-#ifndef MAZE_H
-#define MAZE_H
+#ifndef MAZE_HPP
+#define MAZE_HPP
 
-#include "wall.h"
 #include <string>
 
+#include "wall.hpp"
+
 class Maze{
-   bool** cells_;
+   bool* cells_;
    bool** walls_;
    int rows_;
    int cols_;
+   int numCells_;
    bool isBeside(int cell1, int cell2) const;
 public:
 	//creates a maze
 	Maze(int row, int col, Wall theWalls[],int numWAlls);
 
     //creates a maze from data stored in the file passed in
-	Maze(string mazeFileName);
+	Maze(const char* mazeFileName);
 
 	//returns number of rows in the maze
 	int numRows() const {return rows_;}

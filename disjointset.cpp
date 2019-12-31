@@ -1,7 +1,4 @@
-#include "disjointset.h"
-
-// TODO:remove this
-#include <iostream>
+#include "disjointset.hpp"
 
 /**
  * @brief Adds node to the front of the list.

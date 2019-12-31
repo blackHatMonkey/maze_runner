@@ -1,8 +1,8 @@
 #include <algorithm>
 #include <vector>
 
-#include "maze.h"
-#include "wall.h"
+#include "maze.hpp"
+#include "wall.hpp"
 
 bool runMaze(Maze &maze, std::vector<int> &path, int currentCell, int endCell);
 

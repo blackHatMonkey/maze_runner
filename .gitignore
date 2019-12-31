@@ -33,3 +33,9 @@
 
 # vs-code
 .vscode
+
+# generated maze files
+*.txt
+
+# CMake
+CMakeFiles/

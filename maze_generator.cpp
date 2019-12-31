@@ -3,8 +3,8 @@
 #include <set>
 #include <vector>
 
-#include "disjointset.h"
-#include "wall.h"
+#include "disjointset.hpp"
+#include "wall.hpp"
 
 void generateAllWalls(int, int, std::vector<Wall> &);
 void removeRandomWalls(int, int, std::vector<Wall> &);
